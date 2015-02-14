@@ -1,10 +1,11 @@
 fromStream('tumblr').when({
   '$init': function() { return {} },
-  'observed-blog': function(s,e) {
+  'observed-post': function(s,e) {
     if(!s[e.data.href]) {
-      emit('new-blogs', 'tumblr-blog', {
+      emit('new-posts', 'tumblr-post', {
         href: e.data.href,
-        timestamp: e.data.timestamp
+        blog: e.data.blog,
+        timestamp: e.data.timestamp,
       });
       s[e.data.href] = 1;
     }
