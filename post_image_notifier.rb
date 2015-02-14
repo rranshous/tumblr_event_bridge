@@ -3,17 +3,16 @@ require 'httparty'
 
 CONNSTRING = 'http://0.0.0.0:2113'
 store = EventStore::Client.new(CONNSTRING)
-read_until = ARGV.shift || 10
+start_at = ARGV.shift || 0
 
-puts "READING UNTIL #{read_until}"
-events = store.read_events('new-posts', read_until)
+events = store.resume_read('new-posts', start_at, 10)
 events.each do |event|
   post_href = event[:body]["href"]
   response = HTTParty.get("#{post_href}/xml",
                           headers: {'Accept'=>'application/xml'})
   post_data = response.parsed_response
   next unless post_data.is_a?(Hash)
-  puts "ID: #{last_id}"
+  puts "ID: #{event[:id]}"
   post_type = post_data["tumblr"]["posts"]["post"]["type"]
   if post_type == "photo"
     image_versions = Hash[
@@ -31,4 +30,6 @@ events.each do |event|
   else
     puts "NOTPHOTO"
   end
+  start_at = event[:id]
 end
+puts "RESTARTAT: #{start_at}"

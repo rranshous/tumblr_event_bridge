@@ -1,0 +1,14 @@
+fromStream('post-images').when({
+  '$init': function() { return {} },
+  'tumblr-image': function(s,e) {
+    if(!s[e.data.href]) {
+      emit('new-images', 'tumblr-image', {
+        href: e.data.href,
+        width: e.data.width,
+        post: { href: e.data.post.href }
+      });
+      s[e.data.href] = 1;
+    }
+  }
+})
+
