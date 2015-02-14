@@ -1,0 +1,9 @@
+fromStream('tumblr').when({
+  '$init': function() { return {} },
+  'blog-observed': function(s,e) {
+    if(!s[e.data.href]) {
+      linkTo('tumblr', 'observed-new-blog');
+      s[e.data.href] = 1;
+    }
+  }
+})
