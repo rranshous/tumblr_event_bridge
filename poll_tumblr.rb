@@ -31,8 +31,7 @@ feeds.keys.each do |url|
     end
     store.write_event(TARGET_STREAM, 'observed-blog', blog_data)
   rescue => ex
-    require 'pry'
-    binding.pry
+    puts "ERROR: #{ex}"
   end
   feed.entries.each do |entry|
     begin
@@ -43,8 +42,7 @@ feeds.keys.each do |url|
       }
       store.write_event(TARGET_STREAM, 'observed-post', post_data)
     rescue => ex
-      require 'pry'
-      binding.pry
+      puts "ERROR: #{ex}"
     end
   end
 end
