@@ -4,14 +4,14 @@
 
 require 'feedjira'
 require 'eventstore'
+require 'httparty'
 
 $stdout.sync = true
 puts "STARTING POLL TUMBLR"
 
 CONNSTRING = ARGV.shift || 'http://0.0.0.0:2113'
+URLS_FILE_URL = ENV['URLS_FILE_URL']
 
-blog_urls = File.readlines('urls.txt').map(&:chomp)
-urls = blog_urls.map{|url| "#{url}/rss"}
 store = EventStore::Client.new(CONNSTRING)
 
 SLEEP_TIME = 60 * 10 # 10 mins
@@ -19,6 +19,9 @@ TARGET_STREAM = 'tumblr'
 
 begin
   loop do
+    url_lines = HTTParty.get(URLS_FILE_URL).parsed_response.split("\n")
+    blog_urls = url_lines.select{|l| !l.start_with?('#') && l.chomp.length>0}
+    urls = blog_urls.map{|url| "#{url}/rss"}
     feeds = Feedjira::Feed.fetch_and_parse(urls)
     feeds.keys.each do |url|
       puts "BLOG: #{url}"

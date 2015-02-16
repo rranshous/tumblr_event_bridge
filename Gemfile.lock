@@ -40,3 +40,4 @@ PLATFORMS
 DEPENDENCIES
   eventstore (~> 0.1)
   feedjira (~> 1.6.0)
+  httparty
