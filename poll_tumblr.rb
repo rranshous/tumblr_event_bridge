@@ -13,13 +13,13 @@ CONNSTRING = ARGV.shift || 'http://0.0.0.0:2113'
 blog_urls = File.readlines('urls.txt').map(&:chomp)
 urls = blog_urls.map{|url| "#{url}/rss"}
 store = EventStore::Client.new(CONNSTRING)
-feeds = Feedjira::Feed.fetch_and_parse(urls)
 
 SLEEP_TIME = 60 * 10 # 10 mins
 TARGET_STREAM = 'tumblr'
 
 begin
   loop do
+    feeds = Feedjira::Feed.fetch_and_parse(urls)
     feeds.keys.each do |url|
       puts "BLOG: #{url}"
       feed = feeds[url]
