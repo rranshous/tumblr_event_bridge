@@ -1,5 +1,4 @@
 require 'streamworker'
-require 'pry'
 
 name 'new-post-notifier'
 handle 'tumblr' => 'observed-post' do |state, event, redis|
