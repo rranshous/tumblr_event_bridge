@@ -33,7 +33,7 @@ begin
       begin
         blog_data = {
           'href' => feed.url,
-          'timesetamp' => nil
+          'timestamp' => nil
         }
         if feed.last_modified
           blog_data.merge!({ 'timestamp' => feed.last_modified.iso8601 })
